@@ -71,8 +71,13 @@
         <div class="form-group">
           <label class="form-label">Password</label>
           <div class="input-icon-wrap">
-            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
-            <i class="fa-regular fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+            <input
+            id="password"
+            type="password"
+            class="form-input"
+            placeholder="********"
+            required>
+          <i class="fa-regular fa-eye" id="togglePassword" style="cursor: pointer;"></i>
           </div>
         </div>
         
@@ -99,23 +104,37 @@
   </div>
   <script>
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Keeps the page from refreshing automatically
+  event.preventDefault(); // Keeps the page from refreshing automatically
 
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const termsAccepted = document.getElementById('termsCheckbox').checked;
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const termsAccepted = document.getElementById('termsCheckbox').checked;
 
-      // Browser safety fallback validation
-      if (!firstName || !lastName || !email || !password || !termsAccepted) {
-        alert('Please fill out all required fields.');
-        return;
-      }
+  // Browser safety fallback validation
+  if (!firstName || !lastName || !email || !password || !termsAccepted) {
+    alert('Please fill out all required fields.');
+    return;
+  }
 
-      console.log('Form submission payload:', { firstName, lastName, email });
-      alert('Success! Registration data captured.');
-    });
+  console.log('Form submission payload:', { firstName, lastName, email });
+
+  // 1. SIMULATE AUTO-LOGIN
+  // Store a session flag so dashboard.html knows the user is authenticated
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.setItem('userEmail', email);
+
+  // 2. CLEAR THE FORM
+  // This resets all text boxes and checkboxes back to empty instantly
+  this.reset(); 
+
+  alert('Success! Registration data captured. Redirecting to dashboard...');
+
+  // 3. AUTO LOGIN REDIRECT
+  // Send the user directly to your dashboard.html file
+  window.location.href = 'dashboard.html';
+});
 
     // Password Eye Toggle Feature
     const togglePassword = document.getElementById('togglePassword');

@@ -73,8 +73,8 @@
       <!-- Topbar -->
       <header class="dash-topbar">
         <div class="dash-topbar__greeting">
-          <div class="dash-topbar__greeting-name">Welcome back, John! 👋</div>
-          <div class="dash-topbar__greeting-sub">Here is your portfolio summary.</div>
+          <div class="dash-topbar__greeting-name">Manage Trading Account</div>
+          <div class="dash-topbar__greeting-sub">Manage your account and preferences.</div>
         </div>
         <div class="dash-topbar__right">
           <div class="dash-topbar__icon-wrap">
@@ -134,224 +134,42 @@
       </header>
 
       <div class="dash-content">
+
+        <div class="settings-card">
+          <h2 class="settings-title">Personal Information</h2>
+          <form class="settings-form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" class="form-input" id="settingsName" disabled>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" class="form-input" id="settingsEmail" disabled>
+            </div>
+            <div class="form-group">
+              <label>KYC Status</label>
+              <div class="badge badge--success">Verified</div>
+            </div>
+            <div class="form-group mt-4">
+              <button type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
         
-        <!-- Overview Cards -->
-        <div class="overview-cards">
-          <div class="overview-card overview-card--primary">
-            <div class="overview-card__top">
-              <div class="overview-card__label">Total Balance</div>
-              <i class="fa-solid fa-wallet text-muted"></i>
-            </div>
-            <div class="overview-card__value" id="dashTotalBalance">$124,560.80</div>
-            <div class="overview-card__change">
-              <span class="overview-card__trend trend--up"><i class="fa-solid fa-arrow-up"></i> 12.4%</span> vs last month
-            </div>
-          </div>
-          
-          <div class="overview-card overview-card--secondary">
-            <div class="overview-card__top">
-              <div class="overview-card__label">24h P&L</div>
-              <i class="fa-solid fa-chart-line text-muted"></i>
-            </div>
-            <div class="overview-card__value text-primary" id="dashPnl">+$1,240.50</div>
-            <div class="overview-card__change">
-              <span class="overview-card__trend trend--up" id="dashPnlPercent"><i class="fa-solid fa-arrow-up"></i> 1.2%</span> today
-            </div>
-          </div>
-          
-          <div class="overview-card overview-card--warning">
-            <div class="overview-card__top">
-              <div class="overview-card__label">Active Orders</div>
-              <i class="fa-solid fa-layer-group text-muted"></i>
-            </div>
-            <div class="overview-card__value" id="dashActiveOrders">8</div>
-            <div class="overview-card__change">
-              5 Limit, 3 Stop-Loss
-            </div>
-          </div>
-        </div>
+        <script>
+          setTimeout(() => {
+            const currentEmail = localStorage.getItem('currentUserEmail');
+            let usersData = JSON.parse(localStorage.getItem('usersData') || '{}');
+            const userData = usersData[currentEmail];
+            if (userData) {
+              document.getElementById('settingsName').value = userData.name;
+              document.getElementById('settingsEmail').value = currentEmail;
+            }
+          }, 100);
+        </script>
 
-        <div class="dash-grid">
-          
-          <!-- Left Column -->
-          <div class="flex-col gap-5">
-            <!-- Wallet Card & Allocation -->
-            <div class="grid grid-2 gap-5">
-              <div class="wallet-card">
-                <div class="wallet-card__label">Available USD</div>
-                <div class="wallet-card__balance" id="dashWalletBalance">$45,200.00</div>
-                <div class="wallet-card__actions mt-4">
-                  <button class="btn btn-primary btn-sm" id="btnDeposit" onclick="handleDepositClick()">Deposit</button>
-                  <button class="btn btn-ghost btn-sm" id="btnWithdraw" onclick="handleWithdrawClick()">Withdraw</button>
-                </div>
-              </div>
-              
-              <div class="dash-panel flex items-center gap-6">
-                <div class="allocation-chart">
-                  <div class="donut-chart">
-                    <div class="donut-chart__label">
-                      <div class="donut-chart__label-val">4</div>
-                      <div class="donut-chart__label-sub">Assets</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="allocation-legend">
-                  <div class="alloc-item">
-                    <div class="alloc-item__dot" style="background:var(--primary)"></div>
-                    <div class="alloc-item__name">Bitcoin</div>
-                    <div class="alloc-item__pct">38%</div>
-                  </div>
-                  <div class="alloc-item">
-                    <div class="alloc-item__dot" style="background:var(--secondary)"></div>
-                    <div class="alloc-item__name">Ethereum</div>
-                    <div class="alloc-item__pct">24%</div>
-                  </div>
-                  <div class="alloc-item">
-                    <div class="alloc-item__dot" style="background:#FF6D00"></div>
-                    <div class="alloc-item__name">Solana</div>
-                    <div class="alloc-item__pct">14%</div>
-                  </div>
-                  <div class="alloc-item">
-                    <div class="alloc-item__dot" style="background:#7C4DFF"></div>
-                    <div class="alloc-item__name">Cash</div>
-                    <div class="alloc-item__pct">24%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Open Positions Table -->
-            <div class="dash-panel">
-              <div class="dash-panel__head">
-                <div class="dash-panel__title">Open Positions</div>
-                <div class="dash-panel__action">View All</div>
-              </div>
-              <div style="overflow-x:auto;">
-                <table class="positions-table">
-                  <thead>
-                    <tr>
-                      <th>Asset</th>
-                      <th>Type</th>
-                      <th>Size</th>
-                      <th>Entry Price</th>
-                      <th>Current Price</th>
-                      <th>Unrealized P&L</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="pos-asset">
-                          <div class="pos-asset__icon" style="background:#F7931A;color:#fff;"><i class="fa-brands fa-bitcoin"></i></div>
-                          <div>
-                            <div class="pos-asset__name">BTC/USD</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="pos-type pos-type--long">Long</span></td>
-                      <td>0.5 BTC</td>
-                      <td>$62,100.00</td>
-                      <td>$64,230.50</td>
-                      <td class="pos-pnl up">+$1,065.25</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="pos-asset">
-                          <div class="pos-asset__icon" style="background:#627EEA;color:#fff;"><i class="fa-brands fa-ethereum"></i></div>
-                          <div>
-                            <div class="pos-asset__name">ETH/USD</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="pos-type pos-type--short">Short</span></td>
-                      <td>10 ETH</td>
-                      <td>$3,600.00</td>
-                      <td>$3,450.20</td>
-                      <td class="pos-pnl up">+$1,498.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Column -->
-          <div class="flex-col gap-5">
-            <!-- Timeline / Activity -->
-            <div class="dash-panel">
-              <div class="dash-panel__head">
-                <div class="dash-panel__title">Recent Activity</div>
-              </div>
-              <div class="timeline">
-                <div class="timeline-item">
-                  <div class="timeline-item__dot timeline-item__dot--buy"><i class="fa-solid fa-arrow-down"></i></div>
-                  <div class="timeline-item__content">
-                    <div class="timeline-item__title">Bought BTC</div>
-                    <div class="timeline-item__desc">0.05 BTC at $63,500</div>
-                  </div>
-                  <div class="timeline-item__time">2h ago</div>
-                </div>
-                <div class="timeline-item">
-                  <div class="timeline-item__dot timeline-item__dot--deposit"><i class="fa-solid fa-wallet"></i></div>
-                  <div class="timeline-item__content">
-                    <div class="timeline-item__title">Deposit Successful</div>
-                    <div class="timeline-item__desc">$5,000 via Bank Transfer</div>
-                  </div>
-                  <div class="timeline-item__time">5h ago</div>
-                </div>
-                <div class="timeline-item">
-                  <div class="timeline-item__dot timeline-item__dot--sell"><i class="fa-solid fa-arrow-up"></i></div>
-                  <div class="timeline-item__content">
-                    <div class="timeline-item__title">Sold SOL</div>
-                    <div class="timeline-item__desc">50 SOL at $145.20</div>
-                  </div>
-                  <div class="timeline-item__time">1d ago</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Watchlist -->
-            <div class="dash-panel">
-              <div class="dash-panel__head">
-                <div class="dash-panel__title">Watchlist</div>
-                <button type="button" class="dash-panel__action" id="watchlistAddBtn" aria-label="Add asset to watchlist">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <div class="watchlist-list">
-                <div class="watchlist-item">
-                  <div class="watchlist-item__asset">
-                    <div class="watchlist-item__mini-icon" style="background:#555;color:#fff;">A</div>
-                    <div>
-                      <div class="watchlist-item__name">AAPL</div>
-                      <div class="watchlist-item__ticker">Stock</div>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="watchlist-item__price">$175.40</div>
-                    <div class="watchlist-item__price-sub text-danger">-1.2%</div>
-                  </div>
-                </div>
-                <div class="watchlist-item">
-                  <div class="watchlist-item__asset">
-                    <div class="watchlist-item__mini-icon" style="background:#FFD700;color:#fff;">G</div>
-                    <div>
-                      <div class="watchlist-item__name">GOLD</div>
-                      <div class="watchlist-item__ticker">Commodity</div>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="watchlist-item__price">$2,345.10</div>
-                    <div class="watchlist-item__price-sub text-primary">+0.8%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
       </div>
-    </main>
+    
   </div>
 
   <dialog id="watchlistDialog" class="watchlist-dialog">
@@ -560,68 +378,8 @@
         const ordersEl = document.getElementById('dashActiveOrders');
         if (ordersEl) ordersEl.textContent = userData.dashboard.activeOrders;
       }
-
-      // Update wallet balance to match total balance for mockup
-      const walletEl = document.getElementById('dashWalletBalance');
-      if (walletEl) walletEl.textContent = userData.dashboard.balance;
-
-      // Deposit / Withdraw Logic
-      const btnDeposit = document.getElementById('btnDeposit');
-      const btnWithdraw = document.getElementById('btnWithdraw');
-
-      function parseBalance(balStr) {
-        return parseFloat(balStr.replace(/[^0-9.-]+/g,""));
-      }
-
-      function formatBalance(num) {
-        return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      }
-
-      function updateBalance(amount, type) {
-        let currentBalance = parseBalance(userData.dashboard.balance);
-        let newBalance = currentBalance + amount;
-        
-        if (newBalance < 0) {
-          alert("Insufficient funds!");
-          return;
-        }
-
-        if (!userData.transactions) userData.transactions = [];
-        const today = new Date().toISOString().split('T')[0];
-        userData.transactions.unshift({
-          date: today,
-          type: type,
-          amount: (amount > 0 ? '+' : '-') + formatBalance(Math.abs(amount)),
-          status: 'Completed'
-        });
-
-        userData.dashboard.balance = formatBalance(newBalance);
-        usersData[currentUserEmail] = userData;
-        localStorage.setItem('usersData', JSON.stringify(usersData));
-
-        const balEl = document.getElementById('dashTotalBalance');
-        if (balEl) balEl.textContent = userData.dashboard.balance;
-        if (walletEl) walletEl.textContent = userData.dashboard.balance;
-      }
-
-      window.handleDepositClick = function() {
-        let amount = prompt("How much would you like to deposit?", "1000");
-        if (amount !== null) {
-          let parsed = parseBalance(amount);
-          if (!isNaN(parsed)) updateBalance(parsed, 'Deposit');
-        }
-      };
-
-      window.handleWithdrawClick = function() {
-        let amount = prompt("How much would you like to withdraw?", "100");
-        if (amount !== null) {
-          let parsed = parseBalance(amount);
-          if (!isNaN(parsed)) updateBalance(-parsed, 'Withdrawal');
-        }
-      };
     }
   </script>
-
 
 </body>
 </html>

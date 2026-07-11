@@ -134,7 +134,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('BTC', 64230.50)">Trade</button>
             </div>
           </div>
 
@@ -163,7 +163,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('ETH', 3450.20)">Trade</button>
             </div>
           </div>
           
@@ -192,7 +192,7 @@
               </div>
             </div>
             <div class="market-card__actions">
-              <button class="btn btn-outline btn-sm btn-full">Trade</button>
+              <button class="btn btn-outline btn-sm btn-full" onclick="executeTrade('SOL', 142.75)">Trade</button>
             </div>
           </div>
         </div>
@@ -228,7 +228,7 @@
                 <td class="price-cell">1.0845</td>
                 <td class="text-primary fw-semibold">+0.12%</td>
                 <td>$12.5B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('EUR/USD', 1.0845)">Trade</button></td>
               </tr>
               <tr>
                 <td>
@@ -240,7 +240,7 @@
                 <td class="price-cell">1.2630</td>
                 <td class="text-danger fw-semibold">-0.05%</td>
                 <td>$8.2B</td>
-                <td><button class="btn btn-ghost btn-sm">Trade</button></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="executeTrade('GBP/USD', 1.2630)">Trade</button></td>
               </tr>
             </tbody>
           </table>
@@ -351,6 +351,54 @@
         }
       }
     });
+
+    // --- 3. FAKE TRADING ENGINE ---
+    window.executeTrade = function(asset, currentPrice) {
+      const action = prompt(`Trade ${asset} (Current Price: $${currentPrice})\nEnter 'Buy' or 'Sell':`, 'Buy');
+      if (!action || (action.toLowerCase() !== 'buy' && action.toLowerCase() !== 'sell')) {
+        return;
+      }
+
+      const sizeStr = prompt(`Enter quantity of ${asset} to ${action}:`, '1');
+      const size = parseFloat(sizeStr);
+
+      if (isNaN(size) || size <= 0) {
+        alert('Invalid quantity.');
+        return;
+      }
+
+      const cost = size * currentPrice;
+      let balance = parseFloat(localStorage.getItem('fakeBalance') || '100000');
+      let positions = JSON.parse(localStorage.getItem('openPositions') || '[]');
+
+      if (action.toLowerCase() === 'buy') {
+        if (balance >= cost) {
+          balance -= cost;
+          positions.push({
+            asset: asset,
+            type: 'Buy',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('fakeBalance', balance.toString());
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully bought ${size} ${asset} for $${cost.toFixed(2)}.`);
+        } else {
+          alert('Insufficient Fake USD balance for this trade.');
+        }
+      } else {
+          positions.push({
+            asset: asset,
+            type: 'Sell',
+            size: size,
+            entryPrice: currentPrice,
+            timestamp: Date.now()
+          });
+          localStorage.setItem('openPositions', JSON.stringify(positions));
+          alert(`Successfully shorted ${size} ${asset}.`);
+      }
+    };
   </script>
 </body>
 </html>

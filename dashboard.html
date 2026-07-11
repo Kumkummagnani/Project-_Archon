@@ -479,6 +479,26 @@
         }
       });
     }
+    // Auth Check & User Data Population
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    const userName = localStorage.getItem('userName');
+    if (userName) {
+      const firstName = userName.split(' ')[0];
+      const sidebarNameEl = document.querySelector('.sidebar__user-name');
+      if (sidebarNameEl) sidebarNameEl.textContent = userName;
+      
+      const greetingEl = document.querySelector('.dash-topbar__greeting-name');
+      if (greetingEl) greetingEl.textContent = `Welcome back, ${firstName}! 👋`;
+      
+      const avatarEl = document.querySelector('.sidebar__user-avatar');
+      if (avatarEl) {
+        const initials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        avatarEl.textContent = initials;
+      }
+    }
   </script>
 
 </body>

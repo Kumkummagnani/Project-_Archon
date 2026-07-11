@@ -117,6 +117,8 @@
   // Store a session flag so dashboard.html knows the user is authenticated
   localStorage.setItem('isLoggedIn', 'true');
   localStorage.setItem('userEmail', email);
+  localStorage.setItem('userPassword', password);
+  localStorage.setItem('userName', firstName + ' ' + lastName);
 
   // 2. CLEAR THE FORM
   // This resets all text boxes and checkboxes back to empty instantly
